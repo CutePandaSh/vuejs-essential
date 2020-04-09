@@ -2,41 +2,70 @@
   <div class="navbar navbar-default topnav">
     <div class="container">
       <div class="navbar-header">
-        <a href="/" class="navbar-brand">
+        <button type="button" class="navbar-toggle" @click="toggleNav">
+          <span class="sr-only">Toggle Navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+
+        <router-link to="/" class="navbar-brand">
           <span class="title">{{ logo.title }}</span>
           <img :src="logo.src" :alt="logo.title">
-        </a>
+        </router-link>
       </div>
 
-      <div id="top-navbar-collapse" class="collapse navbar-collapse">
+      <div id="top-navbar-collapse" :class="['collapse', 'navbar-collapse', { in: showCollapseNav }]">
         <ul class="nav navbar-nav">
-          <li v-for="item in navlist">
-            <a href="#">{{ item }}</a>
+          <li v-for="(item, index) in navlist" :class="{ active: index === activeNavIndex }">
+            <a href="#" @click="changeNavIndex(index)">{{ item }}</a>
           </li>
         </ul>
+
+        <div class="navbar-right">
+          <TheEntry/>
+        </div>
+
       </div>
     </div>
   </div>
 </template>
 
 <script>
+
+import TheEntry from '@/components/layouts/TheEntry'
+
 export default {
   name: "TheHeader",
+  components:{
+    TheEntry
+  },
   data() {
     return {
       logo: {
         src: `${this.uploadsUrl}png/vue.png`,
         title: 'VuejsCaff'
       },
-      navlist: ['社区', '头条', '问答', '教程']
+      navlist: ['社区', '头条', '问答', '教程'],
+      activeNavIndex: 0,
+      showCollapseNav: false
     }
   },
   beforeCreate() {
     this.uploadsUrl = 'https://yp.dayanyu.com.cn/images/'
+  },
+  methods: {
+    changeNavIndex(index) {
+      this.activeNavIndex = index
+    },
+    toggleNav() {
+      this.showCollapseNav = !this.showCollapseNav
+    }
   }
 }
 </script>
 
 <style scoped>
- .title { display:none; }
+  .title { display:none; }
+  .navbar-default .navbar-nav > .active > a { background : rgba(0,0,0,.03);}
 </style>
